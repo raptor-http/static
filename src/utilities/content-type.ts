@@ -7,7 +7,7 @@ const MIME_TYPES: Record<string, string> = {
   xml: "application/xml",
   txt: "text/plain",
   md: "text/markdown",
-  
+
   // Images.
   png: "image/png",
   jpg: "image/jpeg",
@@ -16,13 +16,13 @@ const MIME_TYPES: Record<string, string> = {
   svg: "image/svg+xml",
   webp: "image/webp",
   ico: "image/x-icon",
-  
+
   // Fonts.
   woff: "font/woff",
   woff2: "font/woff2",
   ttf: "font/ttf",
   otf: "font/otf",
-  
+
   // Other.
   pdf: "application/pdf",
   zip: "application/zip",

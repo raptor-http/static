@@ -1,5 +1,5 @@
 import type { Context } from "@raptor/framework";
-import { normalize, join } from "./utilities/path.ts";
+import { join, normalize } from "./utilities/path.ts";
 import { contentType } from "./utilities/content-type.ts";
 
 export default class StaticHandler {
@@ -9,7 +9,7 @@ export default class StaticHandler {
     this.path = "public";
   }
 
-  public async handler(context: Context, next: CallableFunction) {
+  public async handler(context: Context, next: CallableFunction): Promise<string | Uint8Array<ArrayBuffer> | Response> {
     const { pathname } = new URL(context.request.url);
 
     if (pathname === "/") return next();
