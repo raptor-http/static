@@ -49,7 +49,13 @@ export default class StaticHandler {
 
       context.response.headers.set("Content-Type", type);
 
-      if (!type.startsWith("text/") && type !== "image/svg+xml") {
+      const isTextBased = 
+        type.startsWith("text/") || 
+        type === "image/svg+xml" ||
+        type === "application/json" ||
+        type === "application/xml";
+
+      if (!isTextBased) {
         return file;
       }
 
