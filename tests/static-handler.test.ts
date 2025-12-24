@@ -1,7 +1,7 @@
 import type { Context } from "@raptor/framework";
 import StaticHandler from "../src/static-handler.ts";
 import { assertEquals, assertInstanceOf } from "@std/assert";
-import { beforeEach, afterEach, describe, it } from "@std/testing/bdd";
+import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
 
 const createMockContext = (url: string): Context => {
   return {
@@ -39,19 +39,25 @@ describe("static handler", () => {
   beforeEach(async () => {
     await Deno.mkdir(testDir, { recursive: true });
 
-    await Deno.writeTextFile(`${testDir}/index.html`, "<html><body>Hello</body></html>");
+    await Deno.writeTextFile(
+      `${testDir}/index.html`,
+      "<html><body>Hello</body></html>",
+    );
     await Deno.writeTextFile(`${testDir}/style.css`, "body { margin: 0; }");
     await Deno.writeTextFile(`${testDir}/script.js`, "console.log('test');");
     await Deno.writeTextFile(`${testDir}/data.json`, '{"key": "value"}');
     await Deno.writeTextFile(`${testDir}/document.txt`, "Plain text content");
     await Deno.writeTextFile(`${testDir}/readme.md`, "# Markdown");
-    await Deno.writeTextFile(`${testDir}/image.svg`, '<svg></svg>');
+    await Deno.writeTextFile(`${testDir}/image.svg`, "<svg></svg>");
 
     const pngHeader = new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]);
     await Deno.writeFile(`${testDir}/image.png`, pngHeader);
 
     await Deno.mkdir(`${testDir}/subdir`, { recursive: true });
-    await Deno.writeTextFile(`${testDir}/subdir/nested.html`, "<html>Nested</html>");
+    await Deno.writeTextFile(
+      `${testDir}/subdir/nested.html`,
+      "<html>Nested</html>",
+    );
 
     handler = new StaticHandler(testDir);
   });
@@ -86,7 +92,9 @@ describe("static handler", () => {
     });
 
     it("should call next() for non-existent files", async () => {
-      const context = createMockContext("http://localhost:3000/nonexistent.html");
+      const context = createMockContext(
+        "http://localhost:3000/nonexistent.html",
+      );
       const next = createMockNext();
 
       const result = await handler.handle(context, next);
@@ -136,7 +144,10 @@ describe("static handler", () => {
 
       assertEquals(typeof result, "string");
       assertEquals(result, "console.log('test');");
-      assertEquals(context.response.headers.get("Content-Type"), "text/javascript");
+      assertEquals(
+        context.response.headers.get("Content-Type"),
+        "text/javascript",
+      );
     });
 
     it("should serve JSON file with correct content type", async () => {
@@ -147,7 +158,10 @@ describe("static handler", () => {
 
       assertEquals(typeof result, "string");
       assertEquals(result, '{"key": "value"}');
-      assertEquals(context.response.headers.get("Content-Type"), "application/json");
+      assertEquals(
+        context.response.headers.get("Content-Type"),
+        "application/json",
+      );
     });
 
     it("should serve plain text file with correct content type", async () => {
@@ -169,7 +183,10 @@ describe("static handler", () => {
 
       assertEquals(typeof result, "string");
       assertEquals(result, "# Markdown");
-      assertEquals(context.response.headers.get("Content-Type"), "text/markdown");
+      assertEquals(
+        context.response.headers.get("Content-Type"),
+        "text/markdown",
+      );
     });
 
     it("should serve SVG as text with correct content type", async () => {
@@ -179,8 +196,11 @@ describe("static handler", () => {
       const result = await handler.handle(context, next);
 
       assertEquals(typeof result, "string");
-      assertEquals(result, '<svg></svg>');
-      assertEquals(context.response.headers.get("Content-Type"), "image/svg+xml");
+      assertEquals(result, "<svg></svg>");
+      assertEquals(
+        context.response.headers.get("Content-Type"),
+        "image/svg+xml",
+      );
     });
 
     it("should serve PNG as binary with correct content type", async () => {
@@ -194,7 +214,9 @@ describe("static handler", () => {
     });
 
     it("should serve nested files", async () => {
-      const context = createMockContext("http://localhost:3000/subdir/nested.html");
+      const context = createMockContext(
+        "http://localhost:3000/subdir/nested.html",
+      );
       const next = createMockNext();
 
       const result = await handler.handle(context, next);
@@ -225,7 +247,10 @@ describe("static handler", () => {
       assertInstanceOf(result, Uint8Array);
       const decoder = new TextDecoder("utf-8");
       assertEquals(decoder.decode(result as Uint8Array), "No extension file");
-      assertEquals(context.response.headers.get("Content-Type"), "application/octet-stream");
+      assertEquals(
+        context.response.headers.get("Content-Type"),
+        "application/octet-stream",
+      );
     });
 
     it("should handle unknown file extensions", async () => {
@@ -239,7 +264,10 @@ describe("static handler", () => {
       assertInstanceOf(result, Uint8Array);
       const decoder = new TextDecoder("utf-8");
       assertEquals(decoder.decode(result as Uint8Array), "Unknown extension");
-      assertEquals(context.response.headers.get("Content-Type"), "application/octet-stream");
+      assertEquals(
+        context.response.headers.get("Content-Type"),
+        "application/octet-stream",
+      );
     });
   });
 });
