@@ -1,6 +1,6 @@
 {
   "name": "@raptor-http/static",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "description": "The first-party static file handler for Raptor.",
   "exports": "./mod.ts",
